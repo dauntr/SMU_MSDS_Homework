@@ -1,0 +1,121 @@
+---
+title: "TDaun_Livesession3assignment"
+author: "Travis Daun"
+date: "11/23/2018"
+output: 
+  html_document:
+    keep_md: true
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+* \> mkdir AwesomePublicDatasets
+* \> cd AwesomePublicDatasets
+* \> git clone https://github.com/caesar0301/awesome-public-datasets
+* ![terminal screen](P1screen.jpeg)
+
+## Question 2
+
+### a. Read in titanic.csv
+
+```{r}
+df <- read.csv("AwesomePublicDatasets/awesome-public-datasets/Datasets/titanic.csv")
+head(df)
+```
+
+### b. Output the respective count of females and males aboard the Titanic. Plot the frequency of females and males. Be sure to give an accurate title and label the axes.
+
+```{r}
+Sex <- sapply(df$Sex, as.numeric)
+female <- length(which(Sex==1))
+male <- length(which(Sex==2))
+female
+male
+plot(df$Sex, main="Gender of Passengers Aboard the Titanic", 
+     ylab="Number", xlab="Gender", col=c("deeppink","blue"))
+```
+
+### c. Please use one apply function (to review: swirl() modules 11, 12) to output the means of Age, Fare, and Survival. Make sure the output is a real number for all three means.
+
+```{r}
+P2cdf <- data.frame(df$Age)
+P2cdf <- cbind(P2cdf, df$Fare)
+P2cdf <- cbind(P2cdf, df$Survived)
+colnames(P2cdf) <- c("Age", "Fare", "Survived")
+sapply(na.omit(P2cdf), mean)
+```
+
+## Question 3
+
+```{r}
+myFunction <- function(x) {
+  median_Age <- median(x$Age, na.rm=TRUE)
+  min_Duration <- min(x$Duration, na.rm=TRUE)
+  max_Duration <- max(x$Duration, na.rm=TRUE)
+  mean_RSES <- mean(x$RSES, na.rm = TRUE)
+  sd_RSES <- sd(x$RSES, na.rm = TRUE)
+  report <- data.frame(median_Age)
+  report <- cbind(report, (mean_RSES/5))
+  report <- cbind(report, (sd_RSES/5))
+  report <- cbind(report, (max_Duration-min_Duration))
+  colnames(report) <- c("MedianAge", "SelfEsteem", "SE_SD", "DurationRange")
+  round(report, digits = 2)
+}
+```
+### Run the function on sleep_data_01.csv
+
+```{r}
+sleep <- read.csv("sleep_data_01.csv")
+
+myFunction(sleep)
+```
+
+## Question 4
+
+```{r}
+library(fivethirtyeight)
+df <- fivethirtyeight::college_recent_grads
+```
+
+* https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/
+
+```{r}
+dim(df)
+colnames(df)
+```
+
+## Question 5
+
+a. Write an R command that gives you the column names of the data frame. Right after that, write one that counts the number of columns but not rows. Hint: The number should match one of your numbers in Question 1d for dimensions.
+
+```{r}
+colnames(df)
+ncol(df)
+```
+
+b. Generate a count of each unique major_category in the data frame. I recommend using libraries to help. To be clear, this should look like a matrix or data frame containing the major_category and the frequency it occurs in the dataset. Assign it to major_count.
+
+```{r}
+library(dplyr)
+major_count <- df %>% group_by(df$major_category) %>% summarize(count=n())
+class(major_count)
+major_count
+```
+
+c. barplot of major_count
+```{r}
+par(las=2)
+barplot(major_count$count, names.arg=major_count$`df$major_category`, horiz = TRUE, 
+        xlab ="Number of Recent Grads", main="Recent Grads by College Major", col="blue")
+```
+
+d. write fivethirtyeight data to a csv file.
+```{r}
+write.csv(df, file = "fivethirtyeightdata.csv",row.names=FALSE)
+```
+
+## Question 6
+https://github.com/dauntr/SMU_MSDS_Homework
+---
