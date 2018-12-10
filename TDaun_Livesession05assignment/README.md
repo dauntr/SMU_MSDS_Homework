@@ -13,6 +13,8 @@ R project file
 girlsNames.csv
 output file of the top 10 girls names for 2015 and 2016 combined.
 
+TDaun_Livesession05assignment.html
+To view http://htmlpreview.github.io/?https://github.com/dauntr/SMU_MSDS_Homework/blob/master/TDaun_Livesession05assignment/TDaun_Livesession05assignment.html
 /datasets
 yob2016.txt
 ; delimited file consisting of three columns with a first name, a gender, and
