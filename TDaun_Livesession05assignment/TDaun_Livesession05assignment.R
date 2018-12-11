@@ -65,7 +65,6 @@ head(final, 10)
 
 # Omit boys names
 final <- subset(final, final$gender == "F")
-head(final, 10)
-head(final, 10)[,1]
+head(data.frame(final$firstName, final$total), 10)
 
-write.csv(head(final,10)[,1], file = "girlsNames.csv", row.names = FALSE)
+write.csv(head(data.frame(final$firstName, final$total), 10), file = "girlsNames.csv", row.names = FALSE)

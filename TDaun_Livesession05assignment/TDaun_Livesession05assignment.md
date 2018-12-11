@@ -9,6 +9,7 @@ output:
 
 
 ## 1. Data Munging
+### a. Import Data
 
 ```r
 # Import the data
@@ -40,6 +41,10 @@ colnames(df) <- c("firstName", "gender", "amountOfChildren")
 # Cast the factor variables to character variables
 df$firstName <- as.character(df$firstName)
 df$gender <- as.character(df$gender)
+```
+### b. Display the summary and structure
+
+```r
 #Summary of data
 summary(df)
 ```
@@ -65,6 +70,7 @@ str(df)
 ##  $ gender          : chr  "F" "F" "F" "F" ...
 ##  $ amountOfChildren: int  19414 19246 16237 16070 14722 14366 13030 11699 10926 10733 ...
 ```
+### c. Figure out which name has yyy
 
 ```r
 #Search the end of the string for "yyy"
@@ -88,6 +94,7 @@ df[210:214,]
 ## 213    Callie      F             1531
 ## 214     Lucia      F             1511
 ```
+### d. Remove this particular observation and save as y2016
 
 ```r
 # Remove duplicate(misspelled) row
@@ -106,6 +113,7 @@ y2016[210:214,]
 ```
 
 ## 2. Data Merging
+### a. Import 2015 data
 
 ```r
 # Import the data
@@ -161,6 +169,8 @@ str(y2015)
 ##  $ gender          : chr  "F" "F" "F" "F" ...
 ##  $ amountOfChildren: int  20415 19638 17381 16340 15574 14871 12371 11766 11381 10283 ...
 ```
+### b. Display the last ten rows in the dataframe. Describe something you find interesting about these 10 rows.
+* Zyrus and Zyus could be the same name with a misspelling. Could be be duplication of data.
 
 ```r
 # Display last 10 rows of dataframe
@@ -180,6 +190,7 @@ tail(y2015, 10)
 ## 33062     Zyrus      M                5
 ## 33063      Zyus      M                5
 ```
+### c. Merge y2016 and y2015 by your Name column; assign it to final.
 
 ```r
 final <- merge(y2015, y2016, by = "firstName")
@@ -208,15 +219,19 @@ str(final)
 colnames(final) <- c("firstName", "gender", "amountOfChildren2015", "amountOfChildren2016")
 ```
 
-## Data Summary
+## 3. Data Summary
+### a. Total 2015 and 2016 number of children with the same name.
 
 ```r
 # Total the 2015 and 2016 children
 final$total = final$amountOfChildren2015 + final$amountOfChildren2016
+```
 
+### b. Sort the data by Total. What are the top 10 most popular names?
+
+```r
 # Sort in decending order
 final <- final[order(-final$total),]
-
 # Top 10 most popular names
 head(final, 10)
 ```
@@ -234,36 +249,32 @@ head(final, 10)
 ## 13054     Jacob      M                15914                14416 30330
 ## 12698  Isabella      F                15574                14722 30296
 ```
+### c. Omit boys and give the top 10 most popular girl’s names.
 
 ```r
 # Omit boys names
 final <- subset(final, final$gender == "F")
-head(final, 10)
+head(data.frame(final$firstName, final$total), 10)
 ```
 
 ```
-##       firstName gender amountOfChildren2015 amountOfChildren2016 total
-## 9820       Emma      F                20415                19414 39829
-## 23607    Olivia      F                19638                19246 38884
-## 27782    Sophia      F                17381                16070 33451
-## 3725        Ava      F                16340                16237 32577
-## 12698  Isabella      F                15574                14722 30296
-## 21722       Mia      F                14871                14366 29237
-## 6509  Charlotte      F                11381                13030 24411
-## 302     Abigail      F                12371                11699 24070
-## 9799      Emily      F                11766                10926 22692
-## 11838    Harper      F                10283                10733 21016
+##    final.firstName final.total
+## 1             Emma       39829
+## 2           Olivia       38884
+## 3           Sophia       33451
+## 4              Ava       32577
+## 5         Isabella       30296
+## 6              Mia       29237
+## 7        Charlotte       24411
+## 8          Abigail       24070
+## 9            Emily       22692
+## 10          Harper       21016
 ```
-
-```r
-head(final, 10)[,1]
-```
-
-```
-##  [1] "Emma"      "Olivia"    "Sophia"    "Ava"       "Isabella" 
-##  [6] "Mia"       "Charlotte" "Abigail"   "Emily"     "Harper"
-```
+### d. Write these top 10 girl names and their Totals to a CSV file
 
 ```r
-write.csv(head(final,10)[,1], file = "girlsNames.csv", row.names = FALSE)
+write.csv(head(data.frame(final$firstName, final$total), 10), file = "girlsNames.csv", row.names = FALSE)
 ```
+
+## 4. Upload to GitHub
+### https://github.com/dauntr/SMU_MSDS_Homework

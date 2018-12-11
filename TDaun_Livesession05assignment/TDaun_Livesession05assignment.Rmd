@@ -4,13 +4,14 @@ author: "Travis Daun"
 date: "12/9/2018"
 output: 
   html_document:
-  keep_md: true
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ## 1. Data Munging
+### a. Import Data
 ```{r}
 # Import the data
 df <- read.table("datasets/yob2016.txt")
@@ -23,14 +24,23 @@ colnames(df) <- c("firstName", "gender", "amountOfChildren")
 # Cast the factor variables to character variables
 df$firstName <- as.character(df$firstName)
 df$gender <- as.character(df$gender)
+```
+### b. Display the summary and structure
+```{r}
 #Summary of data
 summary(df)
 #Structure of Data
 str(df)
+```
+### c. Figure out which name has yyy
+```{r}
 #Search the end of the string for "yyy"
 grep("yyy$", df$firstName)
 #Examine the data around that to verify it is a duplicate
 df[210:214,]
+```
+### d. Remove this particular observation and save as y2016
+```{r}
 # Remove duplicate(misspelled) row
 y2016 <- df[-c(212),]
 # Verify it was removed
@@ -38,6 +48,7 @@ y2016[210:214,]
 ```
 
 ## 2. Data Merging
+### a. Import 2015 data
 ```{r}
 # Import the data
 y2015 <- read.table("datasets/yob2015.txt")
@@ -53,9 +64,15 @@ y2015$gender <- as.character(y2015$gender)
 summary(y2015)
 #Structure of Data
 str(y2015)
+```
+### b. Display the last ten rows in the dataframe. Describe something you find interesting about these 10 rows.
+* Zyrus and Zyus could be the same name with a misspelling. Could be be duplication of data.
+```{r}
 # Display last 10 rows of dataframe
 tail(y2015, 10)
-
+```
+### c. Merge y2016 and y2015 by your Name column; assign it to final.
+```{r}
 final <- merge(y2015, y2016, by = "firstName")
 
 # Remove any rows that did not have names in 2015 and 2016
@@ -71,21 +88,30 @@ str(final)
 colnames(final) <- c("firstName", "gender", "amountOfChildren2015", "amountOfChildren2016")
 ```
 
-## Data Summary
+## 3. Data Summary
+### a. Total 2015 and 2016 number of children with the same name.
 ```{r}
 # Total the 2015 and 2016 children
 final$total = final$amountOfChildren2015 + final$amountOfChildren2016
+```
 
+### b. Sort the data by Total. What are the top 10 most popular names?
+```{r}
 # Sort in decending order
 final <- final[order(-final$total),]
-
 # Top 10 most popular names
 head(final, 10)
-
+```
+### c. Omit boys and give the top 10 most popular girl’s names.
+```{r}
 # Omit boys names
 final <- subset(final, final$gender == "F")
-head(final, 10)
-head(final, 10)[,1]
-
-write.csv(head(final,10)[,1], file = "girlsNames.csv", row.names = FALSE)
+head(data.frame(final$firstName, final$total), 10)
 ```
+### d. Write these top 10 girl names and their Totals to a CSV file
+```{r}
+write.csv(head(data.frame(final$firstName, final$total), 10), file = "girlsNames.csv", row.names = FALSE)
+```
+
+## 4. Upload to GitHub
+### https://github.com/dauntr/SMU_MSDS_Homework

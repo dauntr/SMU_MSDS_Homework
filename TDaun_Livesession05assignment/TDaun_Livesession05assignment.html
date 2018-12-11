@@ -130,6 +130,8 @@ $(document).ready(function () {
 
 <div id="data-munging" class="section level2">
 <h2>1. Data Munging</h2>
+<div id="a.-import-data" class="section level3">
+<h3>a. Import Data</h3>
 <pre class="r"><code># Import the data
 df &lt;- read.table(&quot;datasets/yob2016.txt&quot;)
 str(df)</code></pre>
@@ -146,8 +148,11 @@ str(df)</code></pre>
 colnames(df) &lt;- c(&quot;firstName&quot;, &quot;gender&quot;, &quot;amountOfChildren&quot;)
 # Cast the factor variables to character variables
 df$firstName &lt;- as.character(df$firstName)
-df$gender &lt;- as.character(df$gender)
-#Summary of data
+df$gender &lt;- as.character(df$gender)</code></pre>
+</div>
+<div id="b.-display-the-summary-and-structure" class="section level3">
+<h3>b. Display the summary and structure</h3>
+<pre class="r"><code>#Summary of data
 summary(df)</code></pre>
 <pre><code>##   firstName            gender          amountOfChildren 
 ##  Length:32869       Length:32869       Min.   :    5.0  
@@ -162,6 +167,9 @@ str(df)</code></pre>
 ##  $ firstName       : chr  &quot;Emma&quot; &quot;Olivia&quot; &quot;Ava&quot; &quot;Sophia&quot; ...
 ##  $ gender          : chr  &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
 ##  $ amountOfChildren: int  19414 19246 16237 16070 14722 14366 13030 11699 10926 10733 ...</code></pre>
+</div>
+<div id="c.-figure-out-which-name-has-yyy" class="section level3">
+<h3>c. Figure out which name has yyy</h3>
 <pre class="r"><code>#Search the end of the string for &quot;yyy&quot;
 grep(&quot;yyy$&quot;, df$firstName)</code></pre>
 <pre><code>## [1] 212</code></pre>
@@ -173,6 +181,9 @@ df[210:214,]</code></pre>
 ## 212  Fionayyy      F             1547
 ## 213    Callie      F             1531
 ## 214     Lucia      F             1511</code></pre>
+</div>
+<div id="d.-remove-this-particular-observation-and-save-as-y2016" class="section level3">
+<h3>d. Remove this particular observation and save as y2016</h3>
 <pre class="r"><code># Remove duplicate(misspelled) row
 y2016 &lt;- df[-c(212),]
 # Verify it was removed
@@ -184,8 +195,11 @@ y2016[210:214,]</code></pre>
 ## 214     Lucia      F             1511
 ## 215    Angela      F             1503</code></pre>
 </div>
+</div>
 <div id="data-merging" class="section level2">
 <h2>2. Data Merging</h2>
+<div id="a.-import-2015-data" class="section level3">
+<h3>a. Import 2015 data</h3>
 <pre class="r"><code># Import the data
 y2015 &lt;- read.table(&quot;datasets/yob2015.txt&quot;)
 str(y2015)</code></pre>
@@ -217,6 +231,12 @@ str(y2015)</code></pre>
 ##  $ firstName       : chr  &quot;Emma&quot; &quot;Olivia&quot; &quot;Sophia&quot; &quot;Ava&quot; ...
 ##  $ gender          : chr  &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
 ##  $ amountOfChildren: int  20415 19638 17381 16340 15574 14871 12371 11766 11381 10283 ...</code></pre>
+</div>
+<div id="b.-display-the-last-ten-rows-in-the-dataframe.-describe-something-you-find-interesting-about-these-10-rows." class="section level3">
+<h3>b. Display the last ten rows in the dataframe. Describe something you find interesting about these 10 rows.</h3>
+<ul>
+<li>Zyrus and Zyus could be the same name with a misspelling. Could be be duplication of data.</li>
+</ul>
 <pre class="r"><code># Display last 10 rows of dataframe
 tail(y2015, 10)</code></pre>
 <pre><code>##       firstName gender amountOfChildren
@@ -230,6 +250,9 @@ tail(y2015, 10)</code></pre>
 ## 33061     Zykir      M                5
 ## 33062     Zyrus      M                5
 ## 33063      Zyus      M                5</code></pre>
+</div>
+<div id="c.-merge-y2016-and-y2015-by-your-name-column-assign-it-to-final." class="section level3">
+<h3>c. Merge y2016 and y2015 by your Name column; assign it to final.</h3>
 <pre class="r"><code>final &lt;- merge(y2015, y2016, by = &quot;firstName&quot;)
 
 # Remove any rows that did not have names in 2015 and 2016
@@ -249,14 +272,18 @@ str(final)</code></pre>
 ##  $ amountOfChildren.y: int  9 7 11 18 11 194 28 6 5 14 ...</code></pre>
 <pre class="r"><code>colnames(final) &lt;- c(&quot;firstName&quot;, &quot;gender&quot;, &quot;amountOfChildren2015&quot;, &quot;amountOfChildren2016&quot;)</code></pre>
 </div>
+</div>
 <div id="data-summary" class="section level2">
-<h2>Data Summary</h2>
+<h2>3. Data Summary</h2>
+<div id="a.-total-2015-and-2016-number-of-children-with-the-same-name." class="section level3">
+<h3>a. Total 2015 and 2016 number of children with the same name.</h3>
 <pre class="r"><code># Total the 2015 and 2016 children
-final$total = final$amountOfChildren2015 + final$amountOfChildren2016
-
-# Sort in decending order
+final$total = final$amountOfChildren2015 + final$amountOfChildren2016</code></pre>
+</div>
+<div id="b.-sort-the-data-by-total.-what-are-the-top-10-most-popular-names" class="section level3">
+<h3>b. Sort the data by Total. What are the top 10 most popular names?</h3>
+<pre class="r"><code># Sort in decending order
 final &lt;- final[order(-final$total),]
-
 # Top 10 most popular names
 head(final, 10)</code></pre>
 <pre><code>##       firstName gender amountOfChildren2015 amountOfChildren2016 total
@@ -270,24 +297,34 @@ head(final, 10)</code></pre>
 ## 30128   William      M                15863                15668 31531
 ## 13054     Jacob      M                15914                14416 30330
 ## 12698  Isabella      F                15574                14722 30296</code></pre>
+</div>
+<div id="c.-omit-boys-and-give-the-top-10-most-popular-girls-names." class="section level3">
+<h3>c. Omit boys and give the top 10 most popular girl’s names.</h3>
 <pre class="r"><code># Omit boys names
 final &lt;- subset(final, final$gender == &quot;F&quot;)
-head(final, 10)</code></pre>
-<pre><code>##       firstName gender amountOfChildren2015 amountOfChildren2016 total
-## 9820       Emma      F                20415                19414 39829
-## 23607    Olivia      F                19638                19246 38884
-## 27782    Sophia      F                17381                16070 33451
-## 3725        Ava      F                16340                16237 32577
-## 12698  Isabella      F                15574                14722 30296
-## 21722       Mia      F                14871                14366 29237
-## 6509  Charlotte      F                11381                13030 24411
-## 302     Abigail      F                12371                11699 24070
-## 9799      Emily      F                11766                10926 22692
-## 11838    Harper      F                10283                10733 21016</code></pre>
-<pre class="r"><code>head(final, 10)[,1]</code></pre>
-<pre><code>##  [1] &quot;Emma&quot;      &quot;Olivia&quot;    &quot;Sophia&quot;    &quot;Ava&quot;       &quot;Isabella&quot; 
-##  [6] &quot;Mia&quot;       &quot;Charlotte&quot; &quot;Abigail&quot;   &quot;Emily&quot;     &quot;Harper&quot;</code></pre>
-<pre class="r"><code>write.csv(head(final,10)[,1], file = &quot;girlsNames.csv&quot;, row.names = FALSE)</code></pre>
+head(data.frame(final$firstName, final$total), 10)</code></pre>
+<pre><code>##    final.firstName final.total
+## 1             Emma       39829
+## 2           Olivia       38884
+## 3           Sophia       33451
+## 4              Ava       32577
+## 5         Isabella       30296
+## 6              Mia       29237
+## 7        Charlotte       24411
+## 8          Abigail       24070
+## 9            Emily       22692
+## 10          Harper       21016</code></pre>
+</div>
+<div id="d.-write-these-top-10-girl-names-and-their-totals-to-a-csv-file" class="section level3">
+<h3>d. Write these top 10 girl names and their Totals to a CSV file</h3>
+<pre class="r"><code>write.csv(head(data.frame(final$firstName, final$total), 10), file = &quot;girlsNames.csv&quot;, row.names = FALSE)</code></pre>
+</div>
+</div>
+<div id="upload-to-github" class="section level2">
+<h2>4. Upload to GitHub</h2>
+<div id="httpsgithub.comdauntrsmu_msds_homework" class="section level3">
+<h3><a href="https://github.com/dauntr/SMU_MSDS_Homework" class="uri">https://github.com/dauntr/SMU_MSDS_Homework</a></h3>
+</div>
 </div>
 
 
